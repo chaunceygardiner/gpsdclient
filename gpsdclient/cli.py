@@ -92,11 +92,22 @@ def print_sky(client, fields):
         for field in fields:
             if not first:
                 print(' ', end='')
-            print(j[field], end='')
+            try:
+                print(j[field], end='')
+            except KeyError as e:
+                # Earlier versions of GPSD don't include nSat and uSat.  Compute them.
+                if field == 'nSat':
+                    print(len(j['satellites']), end='')
+                elif field == 'uSat':
+                    uSat = 0
+                    for sat in j['satellites']:
+                        if sat['used']:
+                            uSat += 1
+                    print(uSat, end='')
+                else:
+                    raise e
             first = False
         print()
-        #print(fields)
-        #print('%2s %2s' % (j['nSat'], j['uSat']))
         sys.exit(0)
 
 
