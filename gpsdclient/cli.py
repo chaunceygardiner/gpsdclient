@@ -75,44 +75,28 @@ def stream_json(client):
         print(x)
 
 
-def print_gdop(client):
+def check_sky_fields(fields):
+    valid_fields = { "class", "device", "gdop", "hdop", "nSat", "pdop", "satellites", "tdop", "uSat", "vdop", "xdop", "ydop" }
+    for field in fields:
+        if field not in valid_fields:
+            print('field: %s is not part of the SKY response.' % field)
+            sys.exit(1)
+
+
+def print_sky(client, fields):
+    fields = fields.split(',')
+    check_sky_fields(fields)
     for x in client.json_stream(filter=["SKY"]):
         j = json.loads(x)
-        print(j['gdop'])
-        sys.exit(0)
-
-
-def print_nsat(client):
-    for x in client.json_stream(filter=["SKY"]):
-        j = json.loads(x)
-        print(j['nSat'])
-        sys.exit(0)
-
-
-def print_pdop(client):
-    for x in client.json_stream(filter=["SKY"]):
-        j = json.loads(x)
-        print(j['pdop'])
-        sys.exit(0)
-
-
-def print_sky(client):
-    for x in client.json_stream(filter=["SKY"]):
-        print(x)
-        sys.exit(0)
-
-
-def print_tdop(client):
-    for x in client.json_stream(filter=["SKY"]):
-        j = json.loads(x)
-        print(j['tdop'])
-        sys.exit(0)
-
-
-def print_usat(client):
-    for x in client.json_stream(filter=["SKY"]):
-        j = json.loads(x)
-        print(j['uSat'])
+        first = True
+        for field in fields:
+            if not first:
+                print(' ', end='')
+            print(j[field], end='')
+            first = False
+        print()
+        #print(fields)
+        #print('%2s %2s' % (j['nSat'], j['uSat']))
         sys.exit(0)
 
 
@@ -137,34 +121,11 @@ def main():
         help="Output as JSON strings",
     )
     parser.add_argument(
-        "--gdop",
-        action="store_true",
-        help="Output the geometric (hyperspherical) dilution of precision (pdop & tdop) and exit.",
-    )
-    parser.add_argument(
-        "--nsat",
-        action="store_true",
-        help="Output the number of satellites in the array and exit.",
-    )
-    parser.add_argument(
-        "--pdop",
-        action="store_true",
-        help="Output the Position (spherical/3D) dilution of precision and exit.",
-    )
-    parser.add_argument(
         "--sky",
-        action="store_true",
-        help="Output a single SKY response (in json) and exit.",
-    )
-    parser.add_argument(
-        "--tdop",
-        action="store_true",
-        help="Output the time dilution of precision and exit.",
-    )
-    parser.add_argument(
-        "--usat",
-        action="store_true",
-        help="Output the number of satellites used in the navigation solution and exit.",
+        action="store",
+        type=str,
+        default=None,
+        help="Output the values of the specified fields of a single SKY response and exit (e.g., --SKY=nSat,uSat).",
     )
     args = parser.parse_args()
 
@@ -172,18 +133,8 @@ def main():
         client = GPSDClient(host=args.host, port=args.port)
         if args.json:
             stream_json(client)
-        elif args.gdop:
-            print_gdop(client)
-        elif args.nsat:
-            print_nsat(client)
-        elif args.pdop:
-            print_pdop(client)
-        elif args.sky:
-            print_sky(client)
-        elif args.tdop:
-            print_tdop(client)
-        elif args.usat:
-            print_usat(client)
+        elif args.sky is not None:
+            print_sky(client, args.sky)
         else:
             stream_readable(client)
     except (ConnectionError, EnvironmentError) as e:

@@ -88,53 +88,18 @@ $ gpsdclient --json
 ^C
 ```
 
-Or use gdop to output the geometric (hyperspherical) dilution of precision (pdop & tdop) and exit:
-
-```gdop
-$ gpsdclient --gdop
-1.36
-```
-
-Or use nsat to output the number of satellites in the array and exit:
-
-```nsat
-$ gpsdclient --nsat
-22
-```
-
-Or use pdop to output the Position (spherical/3D) dilution of precision and exit:
-
-```pdop
-$ gpsdclient --pdop
-1.19
-```
-
-Or use sky to output a single SKY response (in json) and exit:
+Or use gdop to output specified fields from the first SKY response encountered and and exit:
 
 ```sky
-$ gpsdclient --sky
-{"class":"SKY","device":"/dev/ttyAMA0","xdop":0.39,"ydop":0.57,"vdop":0.96,"tdop":0.61,"hdop":0.69,"gdop":1.33,"pdop":1.18,"nSat":21,"uSat":17,"satellites":[{"PRN":23,"el":66.0,"az":233.0,"ss":44.0,"used":true,"gnssid":0,"svid":23},{"PRN":18,"el":66.0,"az":11.0,"ss":44.0,"used":true,"gnssid":0,"svid":18},{"PRN":29,"el":49.0,"az":136.0,"ss":44.0,"used":true,"gnssid":0,"svid":29},{"PRN":48,"el":46.0,"az":184.0,"ss":43.0,"used":false,"gnssid":1,"svid":135},{"PRN":15,"el":44.0,"az":94.0,"ss":46.0,"used":true,"gnssid":0,"svid":15},{"PRN":10,"el":33.0,"az":228.0,"ss":41.0,"used":true,"gnssid":0,"svid":10},{"PRN":26,"el":30.0,"az":262.0,"ss":39.0,"used":true,"gnssid":0,"svid":26},{"PRN":16,"el":27.0,"az":298.0,"ss":39.0,"used":true,"gnssid":0,"svid":16},{"PRN":13,"el":22.0,"az":60.0,"ss":40.0,"used":true,"gnssid":0,"svid":13},{"PRN":5,"el":13.0,"az":47.0,"ss":38.0,"used":true,"gnssid":0,"svid":5},{"PRN":27,"el":9.0,"az":317.0,"ss":24.0,"used":true,"gnssid":0,"svid":27},{"PRN":25,"el":1.0,"az":180.0,"ss":0.0,"used":false,"gnssid":0,"svid":25},{"PRN":70,"el":63.0,"az":66.0,"ss":34.0,"used":true,"gnssid":6,"svid":6},{"PRN":85,"el":57.0,"az":55.0,"ss":42.0,"used":true,"gnssid":6,"svid":21},{"PRN":71,"el":48.0,"az":173.0,"ss":41.0,"used":true,"gnssid":6,"svid":7},{"PRN":86,"el":43.0,"az":333.0,"ss":32.0,"used":true,"gnssid":6,"svid":22},{"PRN":76,"el":14.0,"az":274.0,"ss":27.0,"used":true,"gnssid":6,"svid":12},{"PRN":84,"el":11.0,"az":105.0,"ss":15.0,"used":true,"gnssid":6,"svid":20},{"PRN":69,"el":9.0,"az":27.0,"ss":36.0,"used":true,"gnssid":6,"svid":5},{"PRN":77,"el":9.0,"az":321.0,"ss":0.0,"used":false,"gnssid":6,"svid":13},{"PRN":72,"el":4.0,"az":194.0,"ss":0.0,"used":false,"gnssid":6,"svid":8}]}
-```
-
-Or use tdop to output the time dilution of precision and exit:
-
-```tdop
-$ gpsdclient --tdop
-0.75
-```
-
-Or use usat to print the number of satellites used in the navigation solution:
-
-```usat
-$ gpsdclient --usat
-19
+gpsdclient --sky=nSat,uSat,tdop
+18 14 0.64
 ```
 
 All command line options:
 
 ```
 $ gpsdclient -h
-usage: gpsdclient [-h] [--host HOST] [--port PORT] [--json | --gdop | --nsat | --pdop | --sky | --tdop | --usat]
+usage: gpsdclient [-h] [--host HOST] [--port PORT] [--json | --sky=field1,field2,...]
 
 Connect to a running gpsd instance and show human readable output.
 
