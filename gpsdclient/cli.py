@@ -136,7 +136,7 @@ def main():
         action="store",
         type=str,
         default=None,
-        help="Output the values of the specified fields of a single SKY response and exit (e.g., --SKY=nSat,uSat).",
+        help="Output the values of the specified fields of a single SKY response and exit (e.g., --sky=nSat,uSat).",
     )
     args = parser.parse_args()
 
